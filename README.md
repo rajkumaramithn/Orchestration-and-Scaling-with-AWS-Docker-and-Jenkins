@@ -1,8 +1,6 @@
 # Orchestration and Scaling a MERN Application with AWS, Docker and Jenkins
 
-**Prepared by:** <your name>
-**Date:** <date>
-**Repository:** https://github.com/rajkumaramithn/Orchestration-and-Scaling-with-AWS-Docker-and-Jenkins
+**Prepared by:** Rajkumar Amith Nagaraj
 
 ---
 
@@ -16,7 +14,7 @@
 6. How to Access the Application
 7. Challenges and Fixes
 8. Clean-up
-9. Conclusion and Future Improvements
+9. Conclusion
 
 ---
 
@@ -44,20 +42,8 @@ The application is containerized with Docker, its images are stored in Amazon EC
 
 📸 **Attach Screenshot 38:** architecture diagram (draw it at https://app.diagrams.net and save it as `docs/architecture.png`).
 
-![Architecture diagram](docs/architecture.png)
+![Architecture diagram](screenshots/OASJD-0.png)
 
-```
-Developer --> GitHub --(webhook)--> Jenkins on EC2 --> Amazon ECR
-                                                         |
-                                           (images pulled by pods)
-                                                         v
-User --> AWS Load Balancer --> EKS cluster (mern-cluster)
-            Frontend pods (nginx + React)
-              |-- /api/hello   --> Hello service pods
-              |-- /api/profile --> Profile service pods --> MongoDB Atlas
-
-EKS cluster --> CloudWatch (metrics, logs, alarms) --> SNS email alert
-```
 
 **How a request flows:** the browser loads the React app from the load balancer. The React code calls relative paths (`/api/hello/` and `/api/profile/...`). The nginx server inside the frontend container forwards those paths to the `hello-service` and `profile-service` Kubernetes services. The profile service reads and writes data in MongoDB Atlas.
 
@@ -90,18 +76,7 @@ EKS cluster --> CloudWatch (metrics, logs, alarms) --> SNS email alert
 
 ## 4. Repository Structure
 
-```
-Orchestration-and-Scaling-with-AWS-Docker-and-Jenkins/
-  backend/
-    helloService/      (Dockerfile, .dockerignore, index.js)
-    profileService/    (Dockerfile, .dockerignore, index.js)
-  frontend/            (Dockerfile, nginx.conf, .dockerignore, src/)
-  helm/mern-app/       (Chart.yaml, values.yaml, templates/)
-  docs/                (architecture.png, screenshots/)
-  jenkinsfile
-  README.md
-```
-
+![Repo Structure](screenshots/OASJD-77.png) 
 ---
 
 ## 5. Deployment Steps
