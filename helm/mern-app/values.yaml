@@ -1,0 +1,3 @@
+registry: 819439780835.dkr.ecr.ap-south-1.amazonaws.com
+tag: latest
+mongoUrl: ''
