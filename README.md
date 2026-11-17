@@ -40,8 +40,6 @@ The application is containerized with Docker, its images are stored in Amazon EC
 
 ## 2. System Architecture
 
-📸 **Attach Screenshot 38:** architecture diagram (draw it at https://app.diagrams.net and save it as `docs/architecture.png`).
-
 ![Architecture diagram](screenshots/OASJD-0.png)
 
 
@@ -85,9 +83,7 @@ The application is containerized with Docker, its images are stored in Amazon EC
 
 1. Forked the main repository into my GitHub account (Fork, then Create fork).
 
-📸 **Attach Screenshot 01:** forked repository page showing "forked from ..." under the name.
-
-![Forked repository](docs/screenshots/01-fork.png)
+![Forked repository](screenshots/OASJD-1.png)
 
 2. Cloned the fork and added the original repository as `upstream` so updates can be synced:
 
@@ -98,9 +94,10 @@ git remote add upstream https://github.com/UnpredictablePrashant/SampleMERNwithM
 git remote -v
 ```
 
-📸 **Attach Screenshot 02:** `git remote -v` output showing both `origin` and `upstream`.
+![Git remotes](screenshots/OASJD-2.png)
 
-![Git remotes](docs/screenshots/02-git-remote.png)
+![Git remotes](screenshots/OASJD-3.png)
+
 
 3. To sync updates from the main repository at any time:
 
@@ -120,9 +117,7 @@ git push origin main
 | `http://localhost:3001/` | `/api/hello/` |
 | `http://localhost:3002/fetchUser` | `/api/profile/fetchUser` |
 
-📸 **Attach Screenshot 03:** `Home.js` with the updated URLs.
-
-![Home.js changes](docs/screenshots/03-home-js-urls.png)
+![Home.js changes](screenshots/OASJD-5.png)
 
 **Backend Dockerfile** (`backend/helloService/Dockerfile`; the profile service is identical except `EXPOSE 3002`):
 
@@ -177,9 +172,14 @@ server {
 }
 ```
 
-📸 **Attach Screenshot 04:** the three Dockerfiles and `nginx.conf` open in VS Code.
+![Dockerfiles and nginx.conf](screenshots/OASJD-6.png)
 
-![Dockerfiles and nginx.conf](docs/screenshots/04-dockerfiles.png)
+![Dockerfiles and nginx.conf](screenshots/OASJD-7.png)
+
+![Dockerfiles and nginx.conf](screenshots/OASJD-9.png)
+
+![Dockerfiles and nginx.conf](screenshots/OASJD-10.png)
+
 
 **Build and local test**
 
@@ -196,17 +196,17 @@ docker run -d --name frontend --network mern-net -p 3000:80 mern-frontend
 
 `$MONGO` holds the MongoDB Atlas connection string (set in PowerShell with `$MONGO = '<ATLAS_STRING>'`). The connection string is never committed to the repository.
 
-📸 **Attach Screenshot 05:** `docker ps` showing 3 running containers, and the app running at http://localhost:3000.
-
-![Local test](docs/screenshots/05-local-test.png)
+![Local test](screenshots/OASJD-16.png)
 
 ### 5.3 AWS Environment Setup
 
 1. Created an IAM user `devops-admin` with the AdministratorAccess policy and generated an access key for the CLI. This is suitable for a learning project; use least-privilege permissions in production.
 
-📸 **Attach Screenshot 06:** the IAM user's permissions page (do not show the secret key).
+![IAM user](screenshots/OASJD-20.png)
 
-![IAM user](docs/screenshots/06-iam-user.png)
+![IAM user](screenshots/OASJD-21.png)
+
+![IAM user](screenshots/OASJD-22.png)
 
 2. Installed the AWS CLI and configured it with `aws configure` (region `ap-south-1`, output `json`).
 3. Verified the identity:
@@ -214,16 +214,11 @@ docker run -d --name frontend --network mern-net -p 3000:80 mern-frontend
 ```bash
 aws sts get-caller-identity
 ```
-
-📸 **Attach Screenshot 07:** the command output (hide the account ID).
-
-![STS identity](docs/screenshots/07-sts-identity.png)
+![STS identity](screenshots/OASJD-23.png)
 
 4. Installed kubectl, eksctl and Helm, and checked their versions.
 
-📸 **Attach Screenshot 08:** `kubectl version --client`, `eksctl version` and `helm version`.
-
-![Tool versions](docs/screenshots/08-tool-versions.png)
+![Tool versions](screenshots/OASJD-24.png)
 
 ### 5.4 Pushing Images to Amazon ECR
 
@@ -234,10 +229,9 @@ aws ecr create-repository --repository-name mern-frontend --region ap-south-1
 aws ecr create-repository --repository-name mern-hello-service --region ap-south-1
 aws ecr create-repository --repository-name mern-profile-service --region ap-south-1
 ```
+![ECR repositories](screenshots/OASJD-25.png)
 
-📸 **Attach Screenshot 09:** ECR console showing the three repositories.
-
-![ECR repositories](docs/screenshots/09-ecr-repos.png)
+![ECR repositories](screenshots/OASJD-28.png)
 
 Logged Docker in to ECR, then tagged and pushed all three images:
 
@@ -253,13 +247,10 @@ docker push <ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/mern-hello-service:lat
 docker push <ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/mern-profile-service:latest
 ```
 
-📸 **Attach Screenshot 10:** the `Login Succeeded` message and the push output.
+![ECR push](screenshots/OASJD-26.png)
 
-![ECR push](docs/screenshots/10-ecr-push.png)
+![ECR images](screenshots/OASJD-27.png)
 
-📸 **Attach Screenshot 11:** each ECR repository showing the `latest` image.
-
-![ECR images](docs/screenshots/11-ecr-images.png)
 
 ### 5.5 Continuous Integration with Jenkins
 
@@ -267,15 +258,17 @@ docker push <ACCOUNT_ID>.dkr.ecr.ap-south-1.amazonaws.com/mern-profile-service:l
 
 1. Launched an EC2 instance in `ap-south-1`: name `jenkins-server`, Ubuntu Server, instance type `<t3.medium or the type you used>`, 20 GB storage, key pair `jenkins-key`. Security group inbound rules: SSH (22) from my IP, and TCP 8080 from anywhere (so GitHub can reach the webhook).
 
-📸 **Attach Screenshot 12:** the running EC2 instance and its security group inbound rules.
+![EC2 Jenkins server](screenshots/OASJD-29.png)
 
-![EC2 Jenkins server](docs/screenshots/12-ec2-jenkins.png)
+![EC2 Jenkins server](screenshots/OASJD-30.png)
+
+![EC2 Jenkins server](screenshots/OASJD-31.png)
+
 
 2. Created the IAM role `jenkins-ec2-role` with the policy AmazonEC2ContainerRegistryPowerUser and attached it to the instance. This lets Jenkins push to ECR without storing access keys on the server.
 
-📸 **Attach Screenshot 13:** the IAM role attached to the instance.
+![Jenkins IAM role](screenshots/OASJD-33.png)
 
-![Jenkins IAM role](docs/screenshots/13-jenkins-role.png)
 
 3. Connected over SSH and installed Java 21, Git, Docker, the AWS CLI and Jenkins (using the current Jenkins repository signing key). Gave the `jenkins` user access to Docker, and added a 2 GB swap file because the server has limited memory:
 
@@ -285,16 +278,21 @@ sudo usermod -aG docker jenkins
 sudo systemctl enable --now docker
 sudo systemctl restart jenkins
 ```
+![Jenkins status](screenshots/OASJD-36.png)
 
-📸 **Attach Screenshot 14:** `sudo systemctl status jenkins` showing `active (running)`.
+![Jenkins status](screenshots/OASJD-37.png)
 
-![Jenkins status](docs/screenshots/14-jenkins-status.png)
+![Jenkins status](screenshots/OASJD-38.png)
+
+![Jenkins status](screenshots/OASJD-39.png)
 
 4. Opened `http://<EC2_PUBLIC_IP>:8080`, unlocked Jenkins with the initial admin password, installed the suggested plugins, and confirmed that the **GitHub** and **Docker Pipeline** plugins are installed (Manage Jenkins, Plugins, Installed plugins).
 
-📸 **Attach Screenshot 15:** the Jenkins dashboard and the installed plugins list (search for `github` and `docker`).
+![Jenkins plugins](screenshots/OASJD-40.png)
 
-![Jenkins plugins](docs/screenshots/15-jenkins-plugins.png)
+![Jenkins plugins](screenshots/OASJD-41.png)
+
+![Jenkins plugins](screenshots/OASJD-42.png)
 
 **The pipeline (`jenkinsfile` in the repository root)**
 
@@ -347,17 +345,11 @@ Each build tags the images twice: with the Jenkins build number (so every versio
 - Branch: `*/main`
 - Script path: `jenkinsfile` (it must match the exact file name in the repository, including lower case)
 
-📸 **Attach Screenshot 17:** the job configuration page.
+![Jenkins job config](screenshots/OASJD-45.png)
 
-![Jenkins job config](docs/screenshots/17-jenkins-job-config.png)
+![Jenkins build success](screenshots/OASJD-47.png)
 
-📸 **Attach Screenshot 18:** the successful build's stage view (all stages green).
-
-![Jenkins build success](docs/screenshots/18-jenkins-build-success.png)
-
-📸 **Attach Screenshot 19:** ECR showing images tagged with the build number in all three repositories.
-
-![ECR build tags](docs/screenshots/19-ecr-build-tags.png)
+![ECR build tags](screenshots/OASJD-48.png)
 
 **Automatic builds with a GitHub webhook.** In the repository: Settings, Webhooks, Add webhook. Payload URL `http://<EC2_PUBLIC_IP>:8080/github-webhook/`, content type `application/json`, event: push only.
 
