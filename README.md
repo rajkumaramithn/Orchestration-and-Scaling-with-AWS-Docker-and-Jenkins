@@ -353,13 +353,8 @@ Each build tags the images twice: with the Jenkins build number (so every versio
 
 **Automatic builds with a GitHub webhook.** In the repository: Settings, Webhooks, Add webhook. Payload URL `http://<EC2_PUBLIC_IP>:8080/github-webhook/`, content type `application/json`, event: push only.
 
-📸 **Attach Screenshot 20:** the webhook with a green tick under Recent Deliveries.
+![GitHub webhook](screenshots/OASJD-51.png)
 
-![GitHub webhook](docs/screenshots/20-github-webhook.png)
-
-📸 **Attach Screenshot 21:** a Jenkins build showing "Started by GitHub push" after a new commit.
-
-![Auto-triggered build](docs/screenshots/21-auto-trigger.png)
 
 ### 5.6 Creating the EKS Cluster
 
@@ -370,13 +365,10 @@ kubectl get nodes
 
 The cluster has a managed node group of 2 `t3.medium` nodes that can grow to 4. `eksctl` also installs the default add-ons (vpc-cni, kube-proxy, coredns and metrics-server).
 
-📸 **Attach Screenshot 22:** `kubectl get nodes` with 2 nodes in `Ready` state.
+![kubectl get nodes](screenshots/OASJD-52.png)
 
-![kubectl get nodes](docs/screenshots/22-kubectl-nodes.png)
+![kubectl get nodes](screenshots/OASJD-53.png)
 
-📸 **Attach Screenshot 23:** the EKS console showing `mern-cluster` as Active in Asia Pacific (Mumbai).
-
-![EKS console](docs/screenshots/23-eks-console.png)
 
 ### 5.7 Deploying with Helm
 
@@ -410,7 +402,7 @@ Design choices:
 
 📸 **Attach Screenshot 24:** the `helm/mern-app` folder tree in VS Code.
 
-![Helm chart tree](docs/screenshots/24-helm-tree.png)
+![Helm chart tree](screenshots/OASJD-54.png)
 
 Deployment commands:
 
@@ -422,13 +414,14 @@ kubectl get svc
 helm list
 ```
 
-📸 **Attach Screenshot 25:** `kubectl get pods` (6 pods Running), `kubectl get svc` (frontend EXTERNAL-IP) and `helm list`.
+![Helm](screenshots/OASJD-55.png)
 
-![Helm deployment](docs/screenshots/25-helm-deploy.png)
+![Helm](screenshots/OASJD-56.png)
 
-📸 **Attach Screenshot 26:** the application open in the browser on the load balancer address.
+![Helm deployment](d![Helm chart tree](screenshots/OASJD-57.png))
 
-![App running](docs/screenshots/26-app-running.png)
+![App running](![Helm chart tree](screenshots/OASJD-58.png))
+
 
 To roll out new images built by Jenkins:
 
@@ -446,41 +439,37 @@ aws eks create-addon --cluster-name mern-cluster --addon-name amazon-cloudwatch-
 kubectl get pods -n amazon-cloudwatch
 ```
 
-📸 **Attach Screenshot 27:** the pods running in the `amazon-cloudwatch` namespace.
-
-![CloudWatch pods](docs/screenshots/27-cloudwatch-pods.png)
+![CloudWatch pods](screenshots/OASJD-63.png)
 
 3. **Metrics:** CloudWatch, Container Insights, Performance monitoring, cluster `mern-cluster`. The dashboards have cluster, node, namespace, service, workload, pod and container views for CPU, memory and network.
 
-📸 **Attach Screenshot 28:** the Container Insights cluster view and the Pod performance view (namespace `default`).
-
-![Container Insights](docs/screenshots/28-container-insights.png)
+![Container Insights](screenshots/OASJD-64.png)
 
 4. **Centralized logs:** CloudWatch, Logs, Log groups, `/aws/containerinsights/mern-cluster/application`. Logs from the frontend, hello and profile pods are collected here.
 
-📸 **Attach Screenshot 29:** the log groups list and application log entries.
+![CloudWatch logs](screenshots/OASJD-65.png)
 
-![CloudWatch logs](docs/screenshots/29-cloudwatch-logs.png)
+![CloudWatch logs](screenshots/OASJD-66.png)
 
 5. **Alarm:** created the alarm `mern-high-cpu` on the metric `node_cpu_utilization` (static threshold, greater than 70). It notifies the SNS topic `mern-alerts`, which sends an email to my address.
 
-📸 **Attach Screenshot 30:** the alarm configuration and the alarm list.
-
-![CloudWatch alarm](docs/screenshots/30-cloudwatch-alarm.png)
+![CloudWatch alarm](screenshots/OASJD-67.png)
 
 6. **Dashboard:** created a CloudWatch dashboard with node CPU and memory widgets.
 
-📸 **Attach Screenshot 31:** the CloudWatch dashboard.
-
-![CloudWatch dashboard](docs/screenshots/31-cloudwatch-dashboard.png)
+![CloudWatch dashboard](screenshots/OASJD-69.png)
 
 ### 5.9 Final Validation
 
 **Frontend:** the page loads from the load balancer URL and shows the welcome text and the Hello message.
 
-📸 **Attach Screenshot 32:** the frontend in the browser.
+![Frontend validation](screenshots/OASJD-73.png)
 
-![Frontend validation](docs/screenshots/32-validate-frontend.png)
+Automated Build Started
+
+![Frontend validation](screenshots/OASJD-74.png)\
+
+![Frontend validation](screenshots/OASJD-76.png)
 
 **Backend and database:** added a user through the load balancer, refreshed the page to see it listed, and confirmed that the record exists in MongoDB Atlas.
 
@@ -488,9 +477,7 @@ kubectl get pods -n amazon-cloudwatch
 Invoke-RestMethod -Method Post -Uri 'http://<EXTERNAL-IP>/api/profile/addUser' -ContentType 'application/json' -Body '{"name":"Raj","age":100}'
 ```
 
-📸 **Attach Screenshot 33:** the app showing the added user, and the Atlas Browse Collections page with the record.
-
-![Backend and database validation](docs/screenshots/33-validate-backend-db.png)
+![Backend and database validation](docs/screenshots/OSAJD-59.png)
 
 **Health check:**
 
@@ -501,9 +488,7 @@ kubectl logs deployment/profile-service
 kubectl logs deployment/hello-service
 ```
 
-📸 **Attach Screenshot 34:** the health check output.
-
-![Health check](docs/screenshots/34-health-check.png)
+![Health check](screenshots/OASJD-70.png)
 
 **Manual scaling:**
 
@@ -512,9 +497,7 @@ kubectl scale deployment profile-service --replicas=4
 kubectl get pods
 ```
 
-📸 **Attach Screenshot 35:** 4 profile-service pods running.
-
-![Manual scaling](docs/screenshots/35-manual-scaling.png)
+![Manual scaling](screenshots/OASJD-71.png)
 
 **Autoscaling (Horizontal Pod Autoscaler).** `metrics-server` was already installed by `eksctl`, so only the autoscaler was created:
 
@@ -523,15 +506,13 @@ kubectl autoscale deployment profile-service --cpu-percent=70 --min=2 --max=5
 kubectl get hpa
 ```
 
-📸 **Attach Screenshot 36:** `kubectl get hpa` showing a CPU percentage in the TARGETS column.
-
-![Horizontal Pod Autoscaler](docs/screenshots/36-hpa.png)
+![Horizontal Pod Autoscaler](screenshots/OASDJ-70.png)
 
 **End-to-end CI/CD test:** changed the frontend text, committed and pushed. Jenkins built and pushed new images automatically, then the frontend deployment was restarted and the change appeared in the browser.
 
-📸 **Attach Screenshot 37:** the triggered Jenkins build and the updated page.
+![CI flow test](screenshots/OASDJ-75.png)
 
-![CI flow test](docs/screenshots/37-ci-flow-test.png)
+![CI flow test](screenshots/OASDJ-76.png)
 
 ---
 
@@ -586,3 +567,5 @@ Then, in the AWS Console:
 ## 9. Conclusion
 
 The application now builds automatically on every commit, is stored as versioned images in ECR, runs on a scalable Kubernetes cluster with load balancing, and is monitored with centralized metrics, logs and alarms.
+
+Note: Please refer to screenshots directory for more documentation evicdence.
