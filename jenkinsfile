@@ -1,0 +1,36 @@
+pipeline {
+  agent any
+  environment {
+    AWS_REGION = 'ap-south-1'
+    ACCOUNT_ID = '819439780835'
+    REGISTRY   = "${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+    TAG        = "${BUILD_NUMBER}"
+  }
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+    stage('ECR Login') {
+      steps {
+        sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REGISTRY'
+      }
+    }
+    stage('Build Images') {
+      steps {
+        sh 'docker build -t $REGISTRY/mern-hello-service:$TAG -t $REGISTRY/mern-hello-service:latest ./backend/helloService'
+        sh 'docker build -t $REGISTRY/mern-profile-service:$TAG -t $REGISTRY/mern-profile-service:latest ./backend/profileService'
+        sh 'docker build -t $REGISTRY/mern-frontend:$TAG -t $REGISTRY/mern-frontend:latest ./frontend'
+      }
+    }
+    stage('Push Images') {
+      steps {
+        sh 'docker push $REGISTRY/mern-hello-service --all-tags'
+        sh 'docker push $REGISTRY/mern-profile-service --all-tags'
+        sh 'docker push $REGISTRY/mern-frontend --all-tags'
+      }
+    }
+  }
+  post {
+    always { sh 'docker image prune -f' }
+  }
+}
